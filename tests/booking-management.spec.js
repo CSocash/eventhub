@@ -38,7 +38,7 @@ async function bookEvent(page) {
 
   // Fill booking form
   await page.getByLabel('Full Name').fill('Test User');
-  await page.locator('#customer-email').fill('testuser@example.com');
+  await page.getByTestId('customer-email').fill('testuser@example.com');
   await page.getByPlaceholder('+91 98765 43210').fill('9876543210');
   await page.locator('.confirm-booking-btn').click();
 
@@ -99,7 +99,7 @@ test.describe('Booking Management — Critical Happy Paths', () => {
     await expect(page).toHaveURL(/\/bookings\/\d+/);
 
     // -- Step 3: Verify breadcrumb shows booking ref --
-    await expect(page.locator('span.font-mono.font-bold').first()).toContainText(bookingRef);
+    await expect(page.getByText(bookingRef, { exact: true }).first()).toBeVisible();
 
     // -- Step 4: Verify event details section --
     await expect(page.getByText('Event Details')).toBeVisible();
@@ -114,7 +114,7 @@ test.describe('Booking Management — Critical Happy Paths', () => {
     await expect(page.getByText('Total Paid')).toBeVisible();
 
     // -- Step 7: Verify refund eligibility check button is present --
-    await expect(page.locator('#check-refund-btn')).toBeVisible();
+    await expect(page.getByTestId('check-refund-btn')).toBeVisible();
   });
 
   // TC-006 ───────────────────────────────────────────────────────────────────
@@ -133,7 +133,7 @@ test.describe('Booking Management — Critical Happy Paths', () => {
     await expect(page).toHaveURL(/\/events\/\d+/);
 
     await page.getByLabel('Full Name').fill('Test User');
-    await page.locator('#customer-email').fill('testuser@example.com');
+    await page.getByTestId('customer-email').fill('testuser@example.com');
     await page.getByPlaceholder('+91 98765 43210').fill('9876543210');
     await page.locator('.confirm-booking-btn').click();
 
@@ -185,10 +185,10 @@ test.describe('Booking Management — Critical Happy Paths', () => {
 
     // -- Step 4: Assert React confirmation dialog appears --
     await expect(page.getByText('Cancel this booking?')).toBeVisible();
-    await expect(page.locator('#confirm-dialog-yes')).toBeVisible();
+    await expect(page.getByTestId('confirm-dialog-yes')).toBeVisible();
 
     // -- Step 5: Confirm cancellation --
-    await page.locator('#confirm-dialog-yes').click();
+    await page.getByTestId('confirm-dialog-yes').click();
 
     // -- Step 6: Assert redirect to /bookings and success toast --
     await expect(page).toHaveURL(`${BASE_URL}/bookings`);
