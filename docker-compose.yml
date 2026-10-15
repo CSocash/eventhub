@@ -1,6 +1,10 @@
 services:
   tests:
     build: .
+    image: eventhub-playwright
+    # Chromium needs host IPC to avoid running out of shared memory and crashing
+    ipc: host
+    init: true
     # Mount report dirs so artifacts are accessible on the host after the run
     volumes:
       - ./playwright-report:/app/playwright-report

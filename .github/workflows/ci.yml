@@ -166,6 +166,8 @@ jobs:
   # ╚═══════════════════════════════════════════════════════════════════════════
   schema-drift:
     name: Schema Drift Check (PR schema vs Production DB)
+    # Only the upstream repo has the server secrets; forks skip the drift check
+    if: github.repository == 'rahulshettyacademy/eventhub'
     runs-on: ubuntu-latest
     needs: backend-checks   # Skip if backend checks fail – saves SSH round-trip
 

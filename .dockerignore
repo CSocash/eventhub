@@ -6,6 +6,10 @@ docs/
 playwright-report/
 test-results/
 .claude/
+.git/
+.github/
+**/.env
+**/.env.*
 *.log
 .DS_Store
 README.md

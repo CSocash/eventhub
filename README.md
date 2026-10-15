@@ -94,6 +94,30 @@ npm run dev
 
 ---
 
+## Run the Playwright Tests with Docker
+
+The only thing you need installed is [Docker](https://docs.docker.com/get-docker/). No Node.js, npm packages, or browsers are needed on your machine. From the repo root, run:
+
+```bash
+docker compose run --rm --build tests
+```
+
+This builds an image with Node 20 and Playwright with all browsers pre-installed, then runs the whole suite. The first build downloads the browsers and takes a few minutes; later runs reuse the cached image. The command exits non-zero if any test fails.
+
+The tests run against the **deployed site** (`https://eventhub.rahulshettyacademy.com`, set in `playwright.config.ts`), not against local servers, so you don't need to start the app or a database.
+
+| Task | Command |
+|---|---|
+| Run one spec file | `docker compose run --rm --build tests tests/booking-flow.spec.js` |
+| Run tests matching a title | `docker compose run --rm --build tests -g "<test title>"` |
+| Open the HTML report | Open `playwright-report/index.html` in a browser |
+
+After a run, the HTML report is in `playwright-report/`, and failure screenshots and videos are in `test-results/`, both on your machine.
+
+> The GitHub Actions workflow (`.github/workflows/playwright.yml`) builds this same image and runs the same command, so a local Docker run matches CI.
+
+---
+
 ## Root Scripts
 
 | Script | Description |
