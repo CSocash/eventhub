@@ -42,9 +42,9 @@ cd frontend && npx tsc --noEmit && npm run build
 - Swagger UI is served at `http://localhost:3001/api/docs`, generated from JSDoc `@swagger` blocks in `backend/src/routes/*.js`. Update those blocks when changing an endpoint.
 
 ## Playwright tests run against production
-`playwright.config.ts` sets `baseURL` to `https://eventhub.rahulshettyacademy.com`, and the existing spec hardcodes the same URL. `npm run test` therefore exercises the **deployed site, not your local servers**: local code changes are not covered until deployed, and tests create real data in the shared test account. The `playwright.yml` workflow runs the suite against the live site on every push to `main`, fails the run when any test fails, and always uploads the HTML report as the `playwright-report-<run id>` artifact.
+`playwright.config.ts` sets `baseURL` to `https://eventhub.rahulshettyacademy.com`, and the existing spec hardcodes the same URL. `npm run test` therefore exercises the **deployed site, not your local servers**: local code changes are not covered until deployed, and tests create real data in the shared test account. The `playwright.yml` workflow builds the `Dockerfile` image and runs the suite in it (via the `docker-compose.yml` `tests` service) against the live site on every push to `main`, fails the run when any test fails, and always uploads the HTML report as the `playwright-report-<run id>` artifact.
 
-The `Dockerfile` and `docker-compose.yml` only package the test runner (root `package.json`, `playwright.config.ts`, `tests/`); they do not run the app, and the container also targets production. The base image tag (`mcr.microsoft.com/playwright:v1.58.2-noble`) must match the installed `@playwright/test` version, so bump both together.
+The `Dockerfile` and `docker-compose.yml` only package the test runner (root `package.json`, `playwright.config.ts`, `tests/`); they do not run the app, and the container also targets production. The image is `node:20-bookworm` plus `npx playwright install --with-deps` (all browsers), run after `npm ci`, so browser builds always follow the `@playwright/test` version in `package-lock.json`. The CI workflow and local runs use the same image.
 
 ## Testing Conventions
 - Test files go in `tests/` as `<feature-name>.spec.js` (JavaScript, with step comments).
