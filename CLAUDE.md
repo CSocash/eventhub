@@ -83,7 +83,7 @@ Layered: Routes → (validators) → Controllers → Services → Repositories �
 - Path alias `@/` maps to `frontend/`.
 
 ## CI / Deploy
-- `ci.yml` (PRs to `main`): backend checks, frontend type-check + build, and a schema-drift job that diffs the PR's `schema.prisma` against the **production database** over SSH. A schema change fails that job until the migration has been applied on the server.
+- `ci.yml` (PRs to `main`): backend checks, frontend type-check + build, and a schema-drift job that diffs the PR's `schema.prisma` against the **production database** over SSH. The drift job and `deploy.yml` only run in `rahulshettyacademy/eventhub`, which holds the server secrets; forks skip them. A schema change fails that job until the migration has been applied on the server.
 - `deploy.yml` (push to `main`): reruns CI, then deploys over SSH (`git reset --hard origin/main`, `npm ci`, `prisma generate`, `next build`, PM2 reload). Merging to `main` ships to production.
 - **Migrations are never run by the pipeline.** A schema change needs a committed migration (`npm run migrate`) and someone must run `npx prisma migrate deploy` on the server by hand before the PR can go green and merge.
 - CI uses Node 21.7.1.
